@@ -40,7 +40,18 @@ export default function FileDetailScreen() {
 
   const handleShare = async () => {
     if (Platform.OS === "web") {
-      Alert.alert("غير مدعوم", "المشاركة غير مدعومة على الويب");
+      // On web: trigger browser download
+      try {
+        const a = document.createElement("a");
+        a.href = file.uri;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch {
+        Alert.alert("خطأ", "تعذر تنزيل الملف");
+      }
       return;
     }
     try {
@@ -141,15 +152,13 @@ export default function FileDetailScreen() {
         </View>
 
         <View style={styles.actions}>
-          {Platform.OS !== "web" && (
-            <ActionButton
-              icon="share-2"
-              label="مشاركة"
-              color={theme.primary}
-              bg={`${theme.primary}15`}
-              onPress={handleShare}
-            />
-          )}
+          <ActionButton
+            icon={Platform.OS === "web" ? "download" : "share-2"}
+            label={Platform.OS === "web" ? "تنزيل" : "مشاركة"}
+            color={theme.primary}
+            bg={`${theme.primary}15`}
+            onPress={handleShare}
+          />
           <ActionButton
             icon="trash-2"
             label="حذف"
