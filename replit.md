@@ -16,6 +16,27 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
 
+## Artifacts
+
+### `artifacts/file-manager` (`@workspace/file-manager`)
+
+تطبيق Expo React Native لإدارة الملفات باللغة العربية.
+
+**الميزات:**
+- اختيار ملفات متعددة من الهاتف ونسخها إلى مجلد خاص
+- إضافة روابط تنزيل متعددة وتنزيلها في الخلفية (expo-file-system DownloadResumable)
+- عرض الملفات وتصفيحها وفتح تفاصيلها
+- حذف الملفات ومشاركتها
+- تصفية الملفات حسب النوع (صور، فيديو، صوت، مستندات، أرشيف)
+- شاشة إحصاءات التخزين مع دعم حتى 1 تيرابايت
+- تصميم dark/light mode تلقائي
+
+**الحزم المستخدمة:**
+- expo-document-picker: اختيار الملفات
+- expo-file-system: نسخ الملفات وتنزيلها
+- expo-sharing: مشاركة الملفات
+- @react-native-async-storage/async-storage: حفظ بيانات الملفات
+
 ## Structure
 
 ```text
