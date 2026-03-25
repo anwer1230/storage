@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Scripts with tokens (do not commit)
+push-to-github.sh

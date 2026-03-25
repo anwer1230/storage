@@ -17,6 +17,7 @@ import { FileCard } from "@/components/FileCard";
 import { FileIcon } from "@/components/FileIcon";
 import { FileItem, useFileManager } from "@/context/FileManagerContext";
 import { useTheme } from "@/hooks/useTheme";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 type FilterType = "all" | FileItem["type"];
 
@@ -34,6 +35,7 @@ export default function FilesScreen() {
   const insets = useSafeAreaInsets();
   const { files, addFiles, getFilesByType, formatSize } = useFileManager();
   const [filter, setFilter] = useState<FilterType>("all");
+  const { canInstall, install } = usePWAInstall();
 
   const filtered = getFilesByType(filter);
 
@@ -58,6 +60,17 @@ export default function FilesScreen() {
             ملفاتي
           </Text>
           <View style={styles.headerActions}>
+            {canInstall && (
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                  install();
+                }}
+                style={[styles.actionBtn, { backgroundColor: "#0A84FF22" }]}
+              >
+                <Feather name="download-cloud" size={18} color={theme.primary} />
+              </Pressable>
+            )}
             <Pressable
               onPress={handleAddDownload}
               style={[styles.actionBtn, { backgroundColor: theme.surface }]}

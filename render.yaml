@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: file-manager
+    env: static
+    buildCommand: pnpm install && cd artifacts/file-manager && pnpm exec expo export --platform web
+    staticPublishPath: artifacts/file-manager/dist
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
