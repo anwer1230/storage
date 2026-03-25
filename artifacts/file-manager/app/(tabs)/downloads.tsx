@@ -139,8 +139,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 12,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 6,
