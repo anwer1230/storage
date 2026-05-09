@@ -1,0 +1,7 @@
+services:
+  - type: worker
+    name: telegram-video-bot
+    env: python
+    buildCommand: bash build.sh
+    startCommand: python bot/bot.py
+    autoDeploy: true
