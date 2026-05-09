@@ -328,9 +328,18 @@ def run_health_server():
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
-    # تشغيل خادم HTTP في خيط منفصل
+    # 1) خادم HTTP أولاً حتى يجتاز Render فحص الصحة فوراً
     t = threading.Thread(target=run_health_server, daemon=True)
     t.start()
+    import time; time.sleep(1)  # انتظار ثانية حتى يبدأ الخادم
 
-    print("✅ البوت يعمل الآن — Pyrogram — حتى 2 GB مباشرة!")
-    app.run()
+    # 2) تشغيل Pyrogram
+    try:
+        print("✅ البوت يعمل الآن — Pyrogram — حتى 2 GB مباشرة!")
+        app.run()
+    except Exception as e:
+        print(f"❌ خطأ في تشغيل Pyrogram: {e}")
+        import traceback; traceback.print_exc()
+        # إبقاء الخادم HTTP شغّالاً حتى تظهر السجلات على Render
+        while True:
+            time.sleep(60)
