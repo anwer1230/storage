@@ -1,7 +1,9 @@
 import os
 import glob
 import asyncio
+import threading
 import yt_dlp
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from pyrogram import Client, filters
 from pyrogram.types import (
     Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
@@ -300,9 +302,35 @@ async def handle_choice(client: Client, query: CallbackQuery):
 
 
 # ─────────────────────────────────────────────
+# خادم HTTP للـ Health Check (مطلوب لـ Web Service على Render)
+# ─────────────────────────────────────────────
+
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(b"Bot is running!")
+
+    def log_message(self, format, *args):
+        pass  # إخفاء سجلات HTTP
+
+
+def run_health_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), HealthHandler)
+    print(f"✅ Health server على المنفذ {port}")
+    server.serve_forever()
+
+
+# ─────────────────────────────────────────────
 # تشغيل البوت
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
+    # تشغيل خادم HTTP في خيط منفصل
+    t = threading.Thread(target=run_health_server, daemon=True)
+    t.start()
+
     print("✅ البوت يعمل الآن — Pyrogram — حتى 2 GB مباشرة!")
     app.run()
