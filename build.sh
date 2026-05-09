@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
-apt-get update -y
-apt-get install -y ffmpeg python3-dev gcc
-pip install --upgrade pip
+echo "==> Installing system dependencies..."
+apt-get update -y -q
+apt-get install -y -q ffmpeg python3-dev gcc g++ make libssl-dev
+echo "==> Upgrading pip..."
+pip install --upgrade pip setuptools wheel
+echo "==> Installing Python packages..."
 pip install -r requirements.txt
+echo "==> Build complete!"
