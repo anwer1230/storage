@@ -3,18 +3,22 @@ import glob
 import asyncio
 import threading
 import yt_dlp
+import imageio_ffmpeg
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pyrogram import Client, filters
 from pyrogram.types import (
     Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 )
 
-API_ID   = 22043994
-API_HASH = "56f64582b363d367280db96586b97801"
+API_ID    = 22043994
+API_HASH  = "56f64582b363d367280db96586b97801"
 BOT_TOKEN = "8631119369:AAGyCQ62tptJlumPX2Esm2XsukkUcWBjQfA"
 
-DOWNLOAD_DIR = "bot/downloads"
+DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
+# مسار ffmpeg (يُحمَّل تلقائياً بدون apt-get)
+FFMPEG_DIR = os.path.dirname(imageio_ffmpeg.get_ffmpeg_exe())
 
 # تخزين مؤقت: {chat_id: {format_id: {url, info}}}
 pending: dict = {}
@@ -72,7 +76,7 @@ def find_downloaded_file() -> str | None:
 
 
 def fetch_formats(url: str) -> tuple[str, list[dict]]:
-    opts = {"quiet": True, "no_warnings": True, "noplaylist": True}
+    opts = {"quiet": True, "no_warnings": True, "noplaylist": True, "ffmpeg_location": FFMPEG_DIR}
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=False)
 
@@ -223,6 +227,7 @@ async def handle_choice(client: Client, query: CallbackQuery):
             "outtmpl": os.path.join(DOWNLOAD_DIR, "%(title).80s.%(ext)s"),
             "format": "bestaudio/best",
             "quiet": True, "no_warnings": True, "noplaylist": True,
+            "ffmpeg_location": FFMPEG_DIR,
             "postprocessors": [{
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
@@ -235,6 +240,7 @@ async def handle_choice(client: Client, query: CallbackQuery):
             "format": format_id,
             "merge_output_format": "mp4",
             "quiet": True, "no_warnings": True, "noplaylist": True,
+            "ffmpeg_location": FFMPEG_DIR,
         }
 
     filename = None
