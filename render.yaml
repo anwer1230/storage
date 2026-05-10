@@ -1,5 +1,12 @@
 services:
   - type: web
+    name: videograb-web
+    env: node
+    buildCommand: bash web-build.sh
+    startCommand: NODE_ENV=production node artifacts/api-server/dist/index.mjs
+    autoDeploy: true
+
+  - type: web
     name: telegram-video-bot
     env: python
     buildCommand: bash build.sh
