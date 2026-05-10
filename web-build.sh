@@ -4,9 +4,9 @@ set -e
 echo "=== Installing yt-dlp ==="
 pip install yt-dlp --quiet
 
-echo "=== Installing pnpm (to writable home dir) ==="
+echo "=== Installing pnpm@9 (compatible with workspace config) ==="
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-npm install -g pnpm
+npm install -g pnpm@9
 export PATH="$HOME/.npm-global/bin:$PATH"
 pnpm --version
 
