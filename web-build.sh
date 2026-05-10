@@ -4,8 +4,11 @@ set -e
 echo "=== Installing yt-dlp ==="
 pip install yt-dlp --quiet
 
-echo "=== Installing pnpm ==="
-npm install -g pnpm --quiet
+echo "=== Installing pnpm (to writable home dir) ==="
+export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+npm install -g pnpm
+export PATH="$HOME/.npm-global/bin:$PATH"
+pnpm --version
 
 echo "=== Installing Node.js dependencies ==="
 pnpm install --no-frozen-lockfile
